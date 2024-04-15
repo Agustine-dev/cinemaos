@@ -89,6 +89,7 @@ function displayMovieDetails(details) {
         })
         .then(response => response.json())
         .then(data => {
+            console.log("This was the data found",data);
             const movie = data.files_found[3].file_link;
             //console.log(data)
             playVideo.innerHTML = `<iframe src="${movie}" width="100%" height="800" controls allowfullscreen="true" style="border:1px solid black;">
