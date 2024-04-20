@@ -145,22 +145,6 @@ function displayMovieDetails(details) {
             "text-white",
             "col-12"
           );
-          if (!file.file_size || file.file_size.trim() === "") {
-            card.innerHTML = "";
-          } else {
-            let check = false;
-            fetch(file.file_link, {
-              method: "HEAD"
-            })
-              .then((response) => {
-                console.log("This is response", response);
-                let check = true;
-              })
-              .catch((error) => {
-                console.error("An Error Ocuured", error);
-                let check = false;
-              });
-            if (check) {
               card.innerHTML = `
            <div class="card-body">
     <p class="card-text">Type: ${file.file_type}</p>
@@ -173,10 +157,7 @@ function displayMovieDetails(details) {
 </div>
 
         `;
-            } else {
-              card.innerHTML = "";
-            }
-          }
+    
           playVideo.appendChild(card);
         }
       }
