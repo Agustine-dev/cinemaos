@@ -67,11 +67,10 @@ function displayMovieDetails(details) {
   heroBanner.classList.remove("d-none");
   resultGrid.innerHTML = `
                     <div class="movie-poster">
-                        <img src="${
-                          details.Poster != "N/A"
-                            ? details.Poster
-                            : "image_not_found.jpg"
-                        }" alt="">
+                        <img src="${details.Poster != "N/A"
+      ? details.Poster
+      : "image_not_found.jpg"
+    }" alt="">
                     </div>
                     <div class="movie-info">
                         <h3 class="movie-title">
@@ -79,10 +78,10 @@ function displayMovieDetails(details) {
                         </h3>
                         <p class="year"><b>Year: ${details.Year}</p>
                         <p class="rated">Ratings: ${details.Rated} </p>
-                        <p class="genre">${details.Genre}</p>
+                        <p class="genre">Genre: ${details.Genre}</p>
                         <p class="writer">Writer(s): ${details.Writer}</p>
                         <p class="actors">Actors: ${details.Actors}</p>
-                        <p class="plot"><b>Plot</b> <br />${details.Plot}</p>
+                        <p class="plot"><b class="text-decoration-underline">Plot</b> <br />${details.Plot}</p>
                         <p class="language">${details.Language}</p>
                     </div>
     `;
@@ -141,30 +140,31 @@ function displayMovieDetails(details) {
             "card",
             "w-75",
             "m-2",
-            "bg-primary",
-            "text-white",
+            "text-black",
             "col-12"
           );
-              card.innerHTML = `
-           <div class="card-body">
-    <p class="card-text">Type: ${file.file_type}</p>
-    <p class="card-text">Updated: ${file.time_ago}</p>
-    <p class="card-text">File Size: ${file.file_size}</p>
-    <div class="embed-responsive embed-responsive-16by9">
-        <iframe class="embed-responsive-item" src="${file.file_link}" allowfullscreen></iframe>
-    </div>
-    <a href="${file.file_link}" class="btn btn-outline-success mt-2" target="_blank">Download</a>
-</div>
-
-        `;
-    
+          card.innerHTML = `
+            <div class="card-body">
+              <p class="card-title text-warning">${file.file_name}</p>
+              <hr />
+              <p class="card-text">Type: ${file.file_type}</p>
+              <hr />
+              <p class="card-text">Updated: ${file.time_ago}</p>
+              <hr />
+              <p class="card-text">File Size: ${file.file_size}</p>
+              <hr />
+              <a href="${file.file_link}" class="btn btn-outline-success mt-2 w-100" target="_blank">Download</a>
+            </div>
+          `;
           playVideo.appendChild(card);
         }
       }
     })
     .catch((err) => {
       console.error(err);
+      playVideo.innerHTML = '<p class="text-danger fs-1 text-center fw-bolder">An error occurred while fetching video files. Please try again later.</p>';
     });
+
 }
 
 window.addEventListener("click", (event) => {
