@@ -3,6 +3,8 @@ const searchList = document.getElementById("search-list");
 const resultGrid = document.getElementById("result-grid");
 const playVideo = document.getElementById("play_video");
 const heroBanner = document.getElementById("banner");
+const moviesForm = document.getElementById("form_movies");
+const backButton = document.getElementById("back_button");
 
 async function loadMovies(searchTerm) {
   const URL = `http://www.omdbapi.com/?s=${searchTerm}&apikey=56e05e51`;
@@ -51,7 +53,8 @@ function getMovieDetails() {
   searchListMovies.forEach((movie) => {
     movie.addEventListener("click", async () => {
       // console.log(movie.dataset.id);
-      searchList.classList.add("hide-search-list");
+      searchList.classList.add("hidden");
+      backButton.classList.remove("hidden");
       movieSearchBox.value = "";
       const result = await fetch(
         `http://www.omdbapi.com/?i=${movie.dataset.id}&apikey=56e05e51`
@@ -70,20 +73,18 @@ function displayMovieDetails(details) {
                         <img src="${details.Poster != "N/A"
       ? details.Poster
       : "image_not_found.jpg"
-    }" alt="">
+    }" alt="" class="w-full h-auto rounded-xl shadow-xl">
                     </div>
-                    <div class="movie-info">
-                        <h3 class="movie-title">
-                        ${details.Title}
-                        </h3>
-                        <p class="year"><b>Year: ${details.Year}</p>
-                        <p class="rated">Ratings: ${details.Rated} </p>
-                        <p class="genre">Genre: ${details.Genre}</p>
-                        <p class="writer">Writer(s): ${details.Writer}</p>
-                        <p class="actors">Actors: ${details.Actors}</p>
-                        <p class="plot"><b class="text-decoration-underline">Plot</b> <br />${details.Plot}</p>
-                        <p class="language">${details.Language}</p>
-                    </div>
+                    <div class="movie-info antialiased flex flex-col gap-4 p-6 bg-gray-800 text-white rounded-lg shadow-lg max-w-md mx-auto">
+    <h3 class="font-bold text-3xl text-yellow-400">${details.Title}</h3>
+    <p class="year text-gray-300">Year: <span class="text-white">${details.Year}</span></p>
+    <p class="rated text-gray-300">Ratings: <span class="text-white">${details.Rated}</span></p>
+    <p class="genre text-gray-300">Genre: <span class="text-white">${details.Genre}</span></p>
+    <p class="writer text-gray-300">Writer(s): <span class="text-white">${details.Writer}</span></p>
+    <p class="actors text-gray-300">Actors: <span class="text-white">${details.Actors}</span></p>
+    <p class="plot text-gray-300">Plot: <br /><span class="text-white">${details.Plot}</span></p>
+    <p class="language text-gray-300">Language: <span class="text-white">${details.Language}</span></p>
+</div>
     `;
 
   async function filterPlayableFiles(files) {
@@ -114,6 +115,7 @@ function displayMovieDetails(details) {
     return playableFiles;
   }
 
+  
   fetch(
     `https://filepursuit.p.rapidapi.com/?q=${details.Title}&filetype=mp4&type=video`,
     {
@@ -126,34 +128,27 @@ function displayMovieDetails(details) {
   )
     .then((response) => response.json())
     .then(async (data) => {
-      playVideo.innerHTML = '<p class="text-success fs-1 h1">Loading....</p>';
+      playVideo.innerHTML = '<p class="text-green-500 text-4xl">Loading....</p>';
       if (data.status !== "success") {
-        playVideo.innerHTML =
-          '<p class="text-danger fs-1 text-center fw-bolder">Sorry! No Video files found!</p>';
+        playVideo.innerHTML = '<p class="text-red-500 text-4xl text-center font-bold">Sorry! No Video files found!</p>';
       } else {
         playVideo.innerHTML = "";
         let files = data.files_found;
         for (let idx = 0; idx < files.length; idx++) {
           let file = files[idx];
           let card = document.createElement("div");
-          card.classList.add(
-            "card",
-            "w-75",
-            "m-2",
-            "text-black",
-            "col-12"
-          );
+          card.classList.add("bg-white", "shadow-lg", "rounded-lg", "p-4", "m-2", "w-75", "text-black");
           card.innerHTML = `
             <div class="card-body">
-              <p class="card-title text-warning">${file.file_name}</p>
-              <hr />
-              <p class="card-text">Type: ${file.file_type}</p>
-              <hr />
-              <p class="card-text">Updated: ${file.time_ago}</p>
-              <hr />
-              <p class="card-text">File Size: ${file.file_size}</p>
-              <hr />
-              <a href="${file.file_link}" class="btn btn-outline-success mt-2 w-100" target="_blank">Download</a>
+              <p class="text-yellow-500 font-bold">${file.file_name}</p>
+              <hr class="my-2" />
+              <p class="text-gray-700">Type: ${file.file_type}</p>
+              <hr class="my-2" />
+              <p class="text-gray-700">Updated: ${file.time_ago}</p>
+              <hr class="my-2" />
+              <p class="text-gray-700">File Size: ${file.file_size}</p>
+              <hr class="my-2" />
+              <a href="${file.file_link}" class="bg-green-500 text-white px-4 py-2 rounded mt-2 w-full block text-center" target="_blank">Download</a>
             </div>
           `;
           playVideo.appendChild(card);
@@ -172,3 +167,4 @@ window.addEventListener("click", (event) => {
     searchList.classList.add("hide-search-list");
   }
 });
+
